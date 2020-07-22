@@ -1,0 +1,28 @@
+version: '2'
+services:
+  studycentermicroservice-app:
+    image: studycentermicroservice
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_DATA_MONGODB_URI=mongodb://studycentermicroservice-mongodb:27017
+      - SPRING_DATA_MONGODB_DATABASE=studycentermicroservice
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    ports:
+      - 8080:8080
+  studycentermicroservice-mongodb:
+    extends:
+      file: mongodb.yml
+      service: studycentermicroservice-mongodb
+  consul:
+    extends:
+      file: consul.yml
+      service: consul
+
+  consul-config-loader:
+    extends:
+      file: consul.yml
+      service: consul-config-loader
